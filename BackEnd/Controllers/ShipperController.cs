@@ -13,13 +13,18 @@ namespace BackEnd.Controllers
     {
         private IShipperDAL shipperDAL;
 
+        public ShipperController()
+        { 
+            shipperDAL = new ShipperDALImpl(new NorthWindContext());        
+        }
+
         #region Get
         // GET: api/<ShipperController>
         [HttpGet]
         public JsonResult Get()
         {
             IEnumerable<Shipper> shippers = shipperDAL.GetAll();
-            return new JsonResult ( shippers );
+            return new JsonResult (shippers);
         }
 
         // GET api/<ShipperController>/5
@@ -36,24 +41,34 @@ namespace BackEnd.Controllers
 
         // POST api/<ShipperController>
         [HttpPost]
-        public void Post([FromBody] Shipper shipper)
+        public JsonResult Post([FromBody] Shipper shipper)
         {
             shipperDAL.Add(shipper);
-
+            return new JsonResult(shipper);
         }
 
         #endregion
 
+        #region Update
+
         // PUT api/<ShipperController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public JsonResult Put(int id, [FromBody] Shipper shipper)
         {
+            shipperDAL.Add(shipper);
+            return new JsonResult(shipper);
         }
 
+        #endregion
+
+        #region Delete
         // DELETE api/<ShipperController>/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
+            Shipper shipper = new Shipper { ShipperId=id };
+            shipperDAL.Remove(shipper); 
         }
+        #endregion
     }
 }
